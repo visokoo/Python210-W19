@@ -3,8 +3,10 @@
 Assignment: Python Push Ups - Warmup Part 1 - makes10.py
 Author: visokoo | Created: 1/9/2019
 ChangeLog: 1/9/2019, Created file 
- Given 2 ints, a and b, return True if one if them is 10 or if their sum is 10.
- makes10(9, 10) → True
+
+Given 2 ints, a and b, return True if one if them is 10 or if their sum is 10.
+
+makes10(9, 10) → True
 makes10(9, 9) → False
 makes10(1, 9) → True
 ----------------------------------------------------

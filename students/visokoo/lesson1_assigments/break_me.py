@@ -3,7 +3,8 @@
 Assignment: Explore Errors
 Author: visokoo | Created: 1/13/2019
 ChangeLog: 1/13/2019, Created file 
- Create a script with four exceptions
+
+Create a script with four exceptions
 ----------------------------------------------------
  '''
 
