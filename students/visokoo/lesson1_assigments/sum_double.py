@@ -13,7 +13,7 @@ sum_double(2, 2) → 8
 ----------------------------------------------------
  '''
 
- def sum_double(a, b):
+def sum_double(a, b):
   if a == b:
     return ((a + b) * 2)
   return a + b
