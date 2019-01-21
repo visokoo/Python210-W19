@@ -11,11 +11,11 @@ Numbers that are multiples of both, print "FizzBuzz."
 
 def fizz_buzz(n):
   for num in range(n):
-    if num % 5 == 0 and num % 10 == 0:
+    if num % 3 == 0 and num % 5 == 0:
       msg = "FizzBuzz"
-    elif num % 5 == 0:
+    elif num % 3 == 0:
       msg = "Fizz"
-    elif num % 10 == 0:
+    elif num % 5 == 0:
       msg = "Buzz"
     else:
       msg = num
