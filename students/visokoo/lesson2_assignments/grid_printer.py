@@ -36,7 +36,9 @@ def grid_printer(n):
 
 def fancy_grid_printer(table_size, grid_size):
   print(borders(grid_size) * table_size, "+")
+  # print borders
   for i in range(table_size):
+    # print pillars
     for j in range(grid_size):
       print(pillars(grid_size) * table_size, "|", sep=" ")
     print(borders(grid_size) * table_size, "+")
