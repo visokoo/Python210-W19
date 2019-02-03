@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 ----------------------------------------------------
-Assignment: mailroom.py
+Assignment: mailroom-p1.py
 Author: visokoo | Created: 1/25/2019
 ChangeLog: 1/25/2019, Created file
 
