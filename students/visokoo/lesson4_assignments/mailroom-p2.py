@@ -3,7 +3,7 @@
 ----------------------------------------------------
 Assignment: mailroom-p2.py
 Author: visokoo | Created: 2/1/2019
-ChangeLog: 2/1/2019, Created file
+ChangeLog: 2/2/2019, Created file
 
 You work in the mail room at a local charity. Part of your job is to write incredibly boring,
 repetitive emails thanking your donors for their generous gifts. You are tired of doing this
