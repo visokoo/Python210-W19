@@ -54,6 +54,8 @@ def build_new_text(tri):
   word_list[0] = word_list[0].capitalize()
   print(" ".join(word_list))
 
-filename = "sherlock_small.txt"
-trigrams = build_trigrams(read_file(filename))
-build_new_text(trigrams)
+if __name__ == '__main__':
+
+  filename = "sherlock_small.txt"
+  trigrams = build_trigrams(read_file(filename))
+  build_new_text(trigrams)
