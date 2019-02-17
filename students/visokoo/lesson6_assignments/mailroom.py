@@ -27,19 +27,13 @@ donors = [
 def display_donors(donordb):
   [print(row) for row in donordb]
 
-def find_donor(donor_name):
-  for row in donors:
-    if row["name"].lower() == donor_name.lower():
-      return donor_name
-  return donor_name
-
 def thank_you():
   try:
     full_name = input("Name of the giftee (Enter 'list' if you want to see existing donors): ").title()
     if full_name == "List":
       display_donors(donors)
     else:
-      donor_name = find_donor(full_name)
+      donor_name = full_name
       donation_amount = input("Donation Amount: ")
       add_donation(donor_name, donation_amount)
       print(generate_email(donor_name, donation_amount))
@@ -69,10 +63,8 @@ def add_donation(donor_name, donation):
     return donation
 
 def donor_history(donor_name):
-  for row in donors:
-    if row["name"].lower() == donor_name.lower():
-      return row["total_donation_count"] + 1
-  return 1
+  donor_history_count = next((row["total_donation_count"] + 1 for row in donors if row["name"].lower() == donor_name.lower()), 1)
+  return donor_history_count
 
 def generate_email(donor_name, donation):
   email = "Dear {}, \n\nThank you so much for your generous donation amount of ${:.2f}.\n" \
@@ -124,4 +116,3 @@ def main():
 
 if __name__ == '__main__':
   main()
-# else: raise Exception("This file is not meant to be imported.")

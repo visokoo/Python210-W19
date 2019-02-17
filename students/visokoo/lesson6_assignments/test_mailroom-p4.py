@@ -10,7 +10,7 @@ Pytest file for testing mailroom.py
 """
 import pytest
 import glob
-from mailroom import thank_all, add_donation
+from mailroom import thank_all, add_donation, donor_history
 
 def test_add_donation_existing_donor():
   assert add_donation("Paul Allen", 45000) == 100000
@@ -26,7 +26,13 @@ def test_send_letters_correct_count():
   thank_all()
   assert len(glob.glob("*.txt")) == 6
 
-def test_send_letters_correct_contet():
+def test_send_letters_correct_content():
   thank_all()
   line_to_check = open("Mark_Zuckerberg.txt").readline()
   assert line_to_check == "Dear Mark, \n"
+
+def test_donor_history_count_orig():
+  assert donor_history("Mark Zuckerberg") == 3
+
+def test_donor_history_count_edited():
+  assert donor_history("Paul Allen") == 3
