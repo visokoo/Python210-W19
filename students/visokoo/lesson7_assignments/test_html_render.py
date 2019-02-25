@@ -243,13 +243,13 @@ def test_hr():
     hr = Hr()
     file_contents = render_result(hr)
     print(file_contents)
-    assert file_contents == '<hr />\n'
+    assert file_contents == '    <hr />\n'
 
 def test_br():
     br = Br()
     file_contents = render_result(br)
     print(file_contents)
-    assert file_contents == "<br />\n"
+    assert file_contents == "    <br />\n"
 
 def test_content_in_br():
     with pytest.raises(TypeError):
@@ -265,14 +265,14 @@ def test_hr_attr():
     hr = Hr(width=400)
     file_contents = render_result(hr)
     print(file_contents)
-    assert file_contents == '<hr width="400" />\n'
+    assert file_contents == '    <hr width="400" />\n'
 
 def test_br_attr():
     """a line break with an attribute"""
     br = Br(width=400)
     file_contents = render_result(br)
     print(file_contents)
-    assert file_contents == '<br width="400" />\n'
+    assert file_contents == '    <br width="400" />\n'
 
 ########
 # Step 6
@@ -292,7 +292,7 @@ def test_ul():
     file_contents = render_result(u)
     print(file_contents)
 
-    assert file_contents.startswith("<ul")
+    assert file_contents.startswith("    <ul")
 
 def test_li():
     l = Li("The first item in a list")
@@ -300,7 +300,7 @@ def test_li():
     file_contents = render_result(l)
     print(file_contents)
 
-    assert file_contents.startswith("<li")
+    assert file_contents.startswith("    <li")
 
 def test_header2():
     h = H(2, "This is a header2.")

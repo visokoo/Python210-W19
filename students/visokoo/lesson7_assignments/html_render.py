@@ -27,9 +27,9 @@ class Element(object):
             try:
                 content.render(out_file, ind + self.indent)
             except AttributeError:
-                out_file.write(f"{content + ind + self.indent}")
+                out_file.write(ind + self.indent)
+                out_file.write(f"{self.indent + content}")
             out_file.write("\n")
-        # out_file.write(ind)
         out_file.write(f"{ind + self.indent}{self._close_tag()}\n")
 
     def _open_tag(self, ind=indent):
@@ -73,7 +73,7 @@ class OneLineTag(Element):
         return open_tag
 
     def render(self, out_file, ind=""):
-        out_file.write(ind)
+        out_file.write(ind + self.indent)
         out_file.write(self._open_tag())
         for content in self.contents:
             if content:
@@ -96,11 +96,8 @@ class SelfClosingTag(Element):
         raise TypeError("You can not add content to a SelfClosingTag")
 
     def render(self, out_file, ind=""):
-        # if self.attributes:
-        tag = self._open_tag()[:-1] + " />\n"
-        # else:
-        #     tag = self._open_tag()[:-2] + " />\n"
-        out_file.write(f"{tag}")
+        tag = self._open_tag()[:-2] + " />\n"
+        out_file.write(f"{ind}{tag}")
 
 class Hr(SelfClosingTag):
     tag = "hr"
