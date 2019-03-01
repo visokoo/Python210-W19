@@ -1,0 +1,128 @@
+"""
+DB Processor Base class
+"""
+
+import sqlite3
+
+
+class DBProcessor(object):
+    def __init__(self, db_con):
+        self.db_con = db_con
+        # self.db_name = db_name
+
+    def create_db(self, db_name):
+        con = sqlite3.connect(db_name)
+        return con
+
+    def create_table(self, table_name: str, columns={}):
+        col_collection = ""
+        if columns is None:
+            raise Exception("Must provide at least one column.")
+        for column, field_def in columns.items():
+            col_collection += f"{column} {field_def}, "
+        sql_str = f"create table {table_name.capitalize()}({col_collection[:-2]});"
+        return sql_str
+
+    def create_select_statement(self,
+                                db_con,
+                                table_name,
+                                columns=[],
+                                filters={}):
+        statement = ""
+        col_collection = ""
+        filter_statement = ""
+        if columns is None:
+            raise Exception("Must provide at least one column.")
+        for column in columns:
+            col_collection += f"{column}, "
+        col_collection = col_collection[:-2]
+        if filters:
+            for f, v in filters.items():
+                filter_statement += f"{f}='{v}'"
+            statement = f"select {col_collection} from {table_name} where {filter_statement};"
+        else:
+            statement = f"select {col_collection} from {table_name};"
+        return statement
+
+    def create_insert_statement(self, db_con, table_name, columns={}):
+        # INSERT INTO InventoryCounts (InventoryID, ProductID, Count) VALUES (1,100,15);
+        statement = ""
+        col_collection = ""
+        val_collection = ""
+        if columns is None:
+            raise Exception("Must provide at least one column.")
+        for column, value in columns.items():
+            col_collection += f"{column}, "
+            val_collection += f"'{value}', "
+        col_collection = col_collection[:-2]
+        val_collection = val_collection[:-2]
+        statement = f"insert into {table_name} ({col_collection}) values ({val_collection});"
+        return statement
+
+    def create_delete_statement(self, db_con, table_name, filters={}):
+        statement = ""
+        filter_statement = ""
+        if filters is None:
+            raise Exception("You must provide a filter condition statement.")
+        for f, v in filters.items():
+            filter_statement += f"{f}='{v}'"
+        statement = f"delete from {table_name} where {filter_statement};"
+        return statement
+
+    def create_update_statement(self,
+                                db_con,
+                                table_name,
+                                columns={},
+                                filters={}):
+        statement = ""
+        col_collection = ""
+        filter_statement = ""
+        if columns is None:
+            raise Exception("Must provide at least one column.")
+        for column, value in columns.items():
+            col_collection += f"{column} = '{value}', "
+        col_collection = col_collection[:-2]
+        if filters is None:
+            raise Exception("You must provide a filter condition statement.")
+        for f, v in filters.items():
+            filter_statement += f"{f}='{v}'"
+            statement = f"update {table_name} set {col_collection} where {filter_statement};"
+        return statement
+
+
+visokoo = DBProcessor(db_con='visokoo')
+print(
+    visokoo.create_table(
+        "inventory", {
+            "InventoryID": "primary key int not null",
+            "InventoryDate": "date not null"
+        }))
+print(
+    visokoo.create_table(
+        "products", {
+            "ProductID": "primary key int not null",
+            "ProductName": "varchar(100) not null"
+        }))
+print(
+    visokoo.create_table(
+        "inventorycounts", {
+            "InventoryID": "primary key int not null",
+            "ProductID": "int not null",
+            "Count": "int not null"
+        }))
+
+print(visokoo.create_select_statement(visokoo, "students2", ["name", "id"]))
+print(
+    visokoo.create_select_statement(visokoo, "students2", "*",
+                                    {"text": "dropped out"}))
+print(
+    visokoo.create_insert_statement(visokoo, "students", {
+        "inventoryid": "1",
+        "text": "yo"
+    }))
+print(
+    visokoo.create_delete_statement(visokoo, "students2",
+                                    {"text": "dropped out"}))
+print(
+    visokoo.create_update_statement(visokoo, "students1", {"primary_key": 1},
+                                    {"text": "dropped out"}))
