@@ -14,7 +14,7 @@ class DBProcessor(object):
         conn = sqlite3.connect(db_name)
         return conn
 
-    def execute_sql(self, db_con, statement, table_name):
+    def execute_sql(self, db_con, statement):
         try:
             conn = db_con.cursor()
             conn.execute(statement)
