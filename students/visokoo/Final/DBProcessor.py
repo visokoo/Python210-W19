@@ -11,8 +11,15 @@ class DBProcessor(object):
         # self.db_name = db_name
 
     def create_db(self, db_name):
-        con = sqlite3.connect(db_name)
-        return con
+        conn = sqlite3.connect(db_name)
+        return conn
+
+    def execute_sql(self, db_con, statement, table_name):
+        try:
+            conn = db_con.cursor()
+            conn.execute(statement)
+        except Exception as e:
+            raise Exception(e)
 
     def create_table(self, table_name: str, columns={}):
         col_collection = ""
@@ -45,7 +52,6 @@ class DBProcessor(object):
         return statement
 
     def create_insert_statement(self, db_con, table_name, columns={}):
-        # INSERT INTO InventoryCounts (InventoryID, ProductID, Count) VALUES (1,100,15);
         statement = ""
         col_collection = ""
         val_collection = ""
