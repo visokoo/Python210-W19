@@ -109,6 +109,32 @@ class DBProcessor(object):
         return statement
 
 
+class InventoryCountProcessor(DBProcessor):
+    table_name = "inventorycounts"
+    columns = {
+        "InventoryID": "int not null",
+        "ProductID": "int not null",
+        "Count": "int not null",
+        "Primary Key": "InventoryID, ProductID"
+    }
+
+
+class ProductProcessor(DBProcessor):
+    table_name = "products"
+    columns = {
+        "ProductID": "primary key not null",
+        "ProductName": "varchar(100) not null"
+    }
+
+
+class InventoryProcessor(DBProcessor):
+    table_name = "inventories"
+    columns = {
+        "InventoryID": "primary key not null",
+        "InventoryDate": "date not null"
+    }
+
+
 # visokoo = DBProcessor(db_con='visokoo', db_name="visokoo_test.db")
 # products_table = visokoo.create_table(
 #     "products", {
