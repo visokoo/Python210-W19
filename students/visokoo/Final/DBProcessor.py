@@ -50,7 +50,8 @@ class DBProcessor(object):
         sql_str = f"create table {table_name.capitalize()}({col_collection[:-2]}{p_key});"
         return sql_str
 
-    def create_select_statement(self, table_name, columns=[], filters={}):
+    @staticmethod
+    def create_select_statement(table_name, columns=[], filters={}):
         statement = ""
         col_collection = ""
         filter_statement = ""
@@ -67,7 +68,7 @@ class DBProcessor(object):
             statement = f"select {col_collection} from {table_name};"
         return statement
 
-    def create_insert_statement(self, columns={}):
+    def create_insert_statement(self, table_name, columns={}):
         table_name = self.table_name
         statement = ""
         col_collection = ""
@@ -173,6 +174,7 @@ class InventoryProcessor(DBProcessor):
 #             "Primary Key": "InventoryID, ProductID"
 #         }))
 
+# visokoo.create_table()
 # print(visokoo.create_select_statement("students2", ["name", "id"]))
 # print(
 #     visokoo.create_select_statement("students2", "*", {"text": "dropped out"}))
