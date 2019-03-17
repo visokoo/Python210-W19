@@ -115,7 +115,7 @@ class InventoryCountProcessor(DBProcessor):
     columns = {
         "InventoryID": "int not null",
         "ProductID": "int not null",
-        "Count": "int not null",
+        "InventoryCount": "int not null",
         "Primary Key": "InventoryID, ProductID"
     }
 
@@ -134,56 +134,3 @@ class InventoryProcessor(DBProcessor):
         "InventoryID": "primary key not null",
         "InventoryDate": "date not null"
     }
-
-
-# visokoo = DBProcessor(db_con='visokoo', db_name="visokoo_test.db")
-# products_table = visokoo.create_table(
-#     "products", {
-#         "ProductID": "primary key not null",
-#         "ProductName": "varchar(100) not null",
-#         "InventoryDate": "date not null"
-#     })
-# products_table_insert = visokoo.create_insert_statement(
-#     "products", {
-#         "productid": "1",
-#         "productname": "doll",
-#         "inventorydate": "2019-02-01"
-#     })
-# select_statement = visokoo.create_select_statement("products", "*")
-# visokoo.execute_sql(products_table)
-# visokoo.execute_sql(products_table_insert)
-# visokoo.execute_sql(select_statement)
-
-# print(
-#     visokoo.create_table("inventory", {
-#         "InventoryID": "primary key not null",
-#         "InventoryDate": "date not null"
-#     }))
-# print(
-#     visokoo.create_table(
-#         "products", {
-#             "ProductID": "primary key not null",
-#             "ProductName": "varchar(100) not null"
-#         }))
-# print(
-#     visokoo.create_table(
-#         "inventorycounts", {
-#             "InventoryID": "int not null",
-#             "ProductID": "int not null",
-#             "Count": "int not null",
-#             "Primary Key": "InventoryID, ProductID"
-#         }))
-
-# visokoo.create_table()
-# print(visokoo.create_select_statement("students2", ["name", "id"]))
-# print(
-#     visokoo.create_select_statement("students2", "*", {"text": "dropped out"}))
-# print(
-#     visokoo.create_insert_statement("students", {
-#         "inventoryid": "1",
-#         "text": "yo"
-#     }))
-# print(visokoo.create_delete_statement("students2", {"text": "dropped out"}))
-# print(
-#     visokoo.create_update_statement("students1", {"primary_key": 1},
-#                                     {"text": "dropped out"}))

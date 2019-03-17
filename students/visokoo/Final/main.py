@@ -81,7 +81,7 @@ Delete: Fill in the row ID for Filter
         btn_sel_product_info = ttk.Button(
             products_tab,
             text="Select Product Info",
-            command=lambda: IOProcessor.sel(table, mtx))
+            command=lambda: IOProcessor.sel(table, mtx, "products"))
         btn_sel_product_info.grid(row=1, column=0)
 
         btn_ins_product_info = ttk.Button(
@@ -154,7 +154,7 @@ Delete: Fill in the row ID for Filter
         btn_sel_inventory_info = ttk.Button(
             inventory_tab,
             text="Select Inventory Info",
-            command=lambda: IOProcessor.sel(table, mtx))
+            command=lambda: IOProcessor.sel(table, mtx, "inventory"))
         btn_sel_inventory_info.grid(row=1, column=0)
 
         btn_ins_inventory_info = ttk.Button(
@@ -247,7 +247,7 @@ Delete: Fill in the row ID for Filter
         btn_sel_inventory_count_info = ttk.Button(
             inventory_count_tab,
             text="Select Inventory Count Info",
-            command=lambda: IOProcessor.sel(table, mtx))
+            command=lambda: IOProcessor.sel(table, mtx, "inventorycounts"))
         btn_sel_inventory_count_info.grid(row=1, column=0)
 
         btn_ins_inventory_count_info = ttk.Button(
@@ -265,148 +265,192 @@ Delete: Fill in the row ID for Filter
             command=lambda: IOProcessor.upd_inventory_count(
                 table, mtx, ttk.Entry.get(txt_inventory_id),
                 ttk.Entry.get(txt_product_id),
-                ttk.Entry.get(txt_inventory_count)))
+                ttk.Entry.get(txt_inventory_count),
+                ttk.Entry.get(txt_inventory_count_filter)))
         btn_upd_inventory_count_info.grid(row=3, column=0)
 
         btn_del_inventory_count_info = ttk.Button(
             inventory_count_tab,
             text="Delete Inventory Count Info",
-            command=lambda: IOProcessor.del_product(
-                "Delete Inventory Count Info"))
+            command=lambda: IOProcessor.del_inventory_count(
+                table, mtx, ttk.Entry.get(txt_inventory_id),
+                ttk.Entry.get(txt_inventory_id), ttk.Entry.get(txt_product_id),
+                ttk.Entry.get(txt_inventory_count_filter)))
         btn_del_inventory_count_info.grid(row=4, column=0)
 
 
 class IOProcessor():
     @staticmethod
-    def sel(table, text_box):
-        select_statement = dp.DBProcessor.create_select_statement(table, "*")
-        output = db.execute_sql(select_statement)
-        MainWindow.redirector(text_box, select_statement + "\n")
+    def sel(table, text_box, processor):
+        try:
+            select_statement = dp.DBProcessor.create_select_statement(
+                table, "*")
+            output = db.execute_sql(select_statement)
+            MainWindow.redirector(text_box, select_statement + "\n")
+            obj = []
+            for data in output:
+                if processor == "products":
+                    obj.append(pr.Product(data[0], data[1]))
+                elif processor == "inventory":
+                    obj.append(ir.Inventory(data[0], data[1]))
+                elif processor == "inventorycounts":
+                    obj.append(ir.InventoryCount(data[0], data[1]))
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+                MainWindow.redirector(text_box, obj)
+                MainWindow.redirector(text_box, "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def ins_product(table, text_box, id, name):
-        data_dict = dict(productid=id, productname=name)
-        insert_statement = pp.create_insert_statement(table, data_dict)
-        output = pp.execute_sql(insert_statement)
-        MainWindow.redirector(text_box, insert_statement + "\n")
+        try:
+            data_dict = dict(productid=id, productname=name)
+            insert_statement = pp.create_insert_statement(table, data_dict)
+            output = pp.execute_sql(insert_statement)
+            MainWindow.redirector(text_box, insert_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def upd_product(table, text_box, id, name, filters):
-        data_dict = dict(productname=name)
-        filter_dict = dict(productid=filters)
-        update_statement = pp.create_update_statement(table, data_dict,
-                                                      filter_dict)
-        output = pp.execute_sql(update_statement)
-        MainWindow.redirector(text_box, update_statement + "\n")
+        try:
+            data_dict = dict(productname=name)
+            filter_dict = dict(productid=filters)
+            update_statement = pp.create_update_statement(
+                table, data_dict, filter_dict)
+            output = pp.execute_sql(update_statement)
+            MainWindow.redirector(text_box, update_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def del_product(table, text_box, id, name, filters):
-        filter_dict = dict(productid=filters)
-        delete_statement = pp.create_delete_statement(table, filter_dict)
-        output = pp.execute_sql(delete_statement)
-        MainWindow.redirector(text_box, delete_statement + "\n")
+        try:
+            filter_dict = dict(productid=filters)
+            delete_statement = pp.create_delete_statement(table, filter_dict)
+            output = pp.execute_sql(delete_statement)
+            MainWindow.redirector(text_box, delete_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def ins_inventory(table, text_box, id, date):
-        data_dict = dict(inventoryid=id, inventorydate=date)
-        insert_statement = ip.create_insert_statement(table, data_dict)
-        output = ip.execute_sql(insert_statement)
-        MainWindow.redirector(text_box, insert_statement + "\n")
+        try:
+            data_dict = dict(inventoryid=id, inventorydate=date)
+            insert_statement = ip.create_insert_statement(table, data_dict)
+            output = ip.execute_sql(insert_statement)
+            MainWindow.redirector(text_box, insert_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def upd_inventory(table, text_box, id, date, filters):
-        data_dict = dict(inventoryid=id, inventorydate=date)
-        filter_dict = dict(inventoryid=filters)
+        try:
+            data_dict = dict(inventoryid=id, inventorydate=date)
+            filter_dict = dict(inventoryid=filters)
 
-        update_statement = ip.create_update_statement(table, data_dict,
-                                                      filter_dict)
-        output = ip.execute_sql(update_statement)
-        MainWindow.redirector(text_box, update_statement + "\n")
+            update_statement = ip.create_update_statement(
+                table, data_dict, filter_dict)
+            output = ip.execute_sql(update_statement)
+            MainWindow.redirector(text_box, update_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def del_inventory(table, text_box, id, date, filters):
-        filter_dict = dict(inventoryid=filters)
+        try:
+            filter_dict = dict(inventoryid=filters)
 
-        delete_statement = ip.create_delete_statement(table, filter_dict)
-        output = ip.execute_sql(delete_statement)
-        MainWindow.redirector(text_box, delete_statement + "\n")
+            delete_statement = ip.create_delete_statement(table, filter_dict)
+            output = ip.execute_sql(delete_statement)
+            MainWindow.redirector(text_box, delete_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def ins_inventory_count(table, text_box, inventory_id, product_id, count):
-        data_dict = dict(
-            inventoryid=inventory_id, productid=product_id, count=count)
-        insert_statement = ic.create_insert_statement(table, data_dict)
-        output = ic.execute_sql(insert_statement)
-        MainWindow.redirector(text_box, insert_statement + "\n")
+        try:
+            data_dict = dict(
+                inventoryid=inventory_id, productid=product_id, inventorycount=count)
+            insert_statement = ic.create_insert_statement(table, data_dict)
+            output = ic.execute_sql(insert_statement)
+            MainWindow.redirector(text_box, insert_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def upd_inventory_count(table, text_box, inventory_id, product_id, count,
                             filters):
-        data_dict = dict(
-            inventoryid=inventory_id, productid=product_id, count=count)
-        filter_dict = dict(inventoryid=filters)
+        try:
+            data_dict = dict(
+                inventoryid=inventory_id,
+                productid=product_id,
+                inventorycount=count)
+            filter_dict = dict(inventoryid=filters)
 
-        update_statement = ic.create_update_statement(table, data_dict,
-                                                      filter_dict)
-        output = ip.execute_sql(update_statement)
-        MainWindow.redirector(text_box, update_statement + "\n")
+            update_statement = ic.create_update_statement(
+                table, data_dict, filter_dict)
+            output = ip.execute_sql(update_statement)
+            MainWindow.redirector(text_box, update_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
     @staticmethod
     def del_inventory_count(table, text_box, inventory_id, product_id, count,
                             filters):
-        filter_dict = dict(inventoryid=filters)
+        try:
+            filter_dict = dict(inventoryid=filters)
 
-        delete_statement = ic.create_delete_statement(table, filter_dict)
-        output = ic.execute_sql(delete_statement)
-        MainWindow.redirector(text_box, delete_statement + "\n")
+            delete_statement = ic.create_delete_statement(table, filter_dict)
+            output = ic.execute_sql(delete_statement)
+            MainWindow.redirector(text_box, delete_statement + "\n")
 
-        for data in output:
-            MainWindow.redirector(text_box, data)
-            MainWindow.redirector(text_box, "\n")
+            for data in output:
+                MainWindow.redirector(text_box, data)
+                MainWindow.redirector(text_box, "\n")
+        except Exception as e:
+            MainWindow.redirector(text_box, e)
 
 
 if __name__ == '__main__':
-    db = dp.DBProcessor(db_con="visokoo", db_name="visokoo_test.db")
-    pp = dp.ProductProcessor(db_con="visokoo", db_name="visokoo_test.db")
-    ip = dp.InventoryProcessor(db_con="visokoo", db_name="visokoo_test.db")
-    ic = dp.InventoryCountProcessor(
-        db_con="visokoo", db_name="visokoo_test.db")
+    db = dp.DBProcessor(db_con="visokoo", db_name="visokoo.db")
+    pp = dp.ProductProcessor(db_con="visokoo", db_name="visokoo.db")
+    ip = dp.InventoryProcessor(db_con="visokoo", db_name="visokoo.db")
+    ic = dp.InventoryCountProcessor(db_con="visokoo", db_name="visokoo.db")
     product_tbl = pp.create_table()
     inventory_tbl = ip.create_table()
     inventory_count_tbl = ic.create_table()
